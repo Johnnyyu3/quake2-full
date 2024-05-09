@@ -25,7 +25,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 static qboolean	is_quad;
 static byte		is_silenced;
-
+//jy
+time_t time;
 
 void weapon_grenade_fire (edict_t *ent, qboolean held);
 
@@ -175,6 +176,18 @@ void ChangeWeapon (edict_t *ent)
 {
 	int i;
 
+	//jy
+	int			ammo_index;
+	gitem_t*	ammo_item;
+	if (ITEM_INDEX(ent->client->pers.weapon) > 50)
+	{
+		int ret_ammo = ent->client->pers.inventory[ITEM_INDEX(FindItem("Current Rounds"))];
+		ammo_item = FindItem(ent->client->pers.weapon->ammo);
+		ammo_index = ITEM_INDEX(ammo_item);
+		ent->client->pers.inventory[ammo_index] += ret_ammo;
+		ent->client->pers.inventory[ITEM_INDEX(FindItem("Current Rounds"))] = 0;
+	}
+
 	if (ent->client->grenade_time)
 	{
 		ent->client->grenade_time = level.time;
@@ -316,6 +329,8 @@ void Use_Weapon (edict_t *ent, gitem_t *item)
 	// see if we're already using it
 	if (item == ent->client->pers.weapon)
 		return;
+
+
 
 	if (item->ammo && !g_select_empty->value && !(item->flags & IT_AMMO))
 	{
@@ -781,6 +796,13 @@ void Weapon_RocketLauncher_Fire (edict_t *ent)
 	VectorSet(offset, 8, 8, ent->viewheight-8);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 	fire_rocket (ent, start, forward, damage, 650, damage_radius, radius_damage);
+
+	start[0] -= right[0];
+	fire_rocket(ent, start, forward, damage, 50, damage_radius, radius_damage);
+	start[0] += right[0] *2;
+	fire_rocket(ent, start, forward, damage, 50, damage_radius, radius_damage);
+	start[0] += right[0];
+	fire_rocket(ent, start, forward, damage, 50, damage_radius, radius_damage);
 
 	// send muzzle flash
 	gi.WriteByte (svc_muzzleflash);

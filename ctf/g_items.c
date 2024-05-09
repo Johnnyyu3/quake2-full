@@ -475,6 +475,16 @@ qboolean Add_Ammo (edict_t *ent, gitem_t *item, int count)
 		max = ent->client->pers.max_cells;
 	else if (item->tag == AMMO_SLUGS)
 		max = ent->client->pers.max_slugs;
+	else if (item->tag == 5)
+		max = 100;
+	else if (item->tag == 6)
+		max = 88;
+	else if (item->tag == 7)
+		max = 6;
+	else if (item->tag == 8)
+		max = 1;
+	else if (item->tag == 9)
+		max = 1;
 	else
 		return false;
 

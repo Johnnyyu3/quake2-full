@@ -1,0 +1,13 @@
+D:\work\it266v2\Q2\quake2-full\ref_gl\gl_draw.c;D:\work\it266v2\Q2\quake2-full\ref_gl\release\gl_draw.obj
+D:\work\it266v2\Q2\quake2-full\ref_gl\gl_image.c;D:\work\it266v2\Q2\quake2-full\ref_gl\release\gl_image.obj
+D:\work\it266v2\Q2\quake2-full\ref_gl\gl_light.c;D:\work\it266v2\Q2\quake2-full\ref_gl\release\gl_light.obj
+D:\work\it266v2\Q2\quake2-full\ref_gl\gl_mesh.c;D:\work\it266v2\Q2\quake2-full\ref_gl\release\gl_mesh.obj
+D:\work\it266v2\Q2\quake2-full\ref_gl\gl_model.c;D:\work\it266v2\Q2\quake2-full\ref_gl\release\gl_model.obj
+D:\work\it266v2\Q2\quake2-full\ref_gl\gl_rmain.c;D:\work\it266v2\Q2\quake2-full\ref_gl\release\gl_rmain.obj
+D:\work\it266v2\Q2\quake2-full\ref_gl\gl_rmisc.c;D:\work\it266v2\Q2\quake2-full\ref_gl\release\gl_rmisc.obj
+D:\work\it266v2\Q2\quake2-full\ref_gl\gl_rsurf.c;D:\work\it266v2\Q2\quake2-full\ref_gl\release\gl_rsurf.obj
+D:\work\it266v2\Q2\quake2-full\ref_gl\gl_warp.c;D:\work\it266v2\Q2\quake2-full\ref_gl\release\gl_warp.obj
+D:\work\it266v2\Q2\quake2-full\win32\glw_imp.c;D:\work\it266v2\Q2\quake2-full\ref_gl\release\glw_imp.obj
+D:\work\it266v2\Q2\quake2-full\game\q_shared.c;D:\work\it266v2\Q2\quake2-full\ref_gl\release\q_shared.obj
+D:\work\it266v2\Q2\quake2-full\win32\q_shwin.c;D:\work\it266v2\Q2\quake2-full\ref_gl\release\q_shwin.obj
+D:\work\it266v2\Q2\quake2-full\win32\qgl_win.c;D:\work\it266v2\Q2\quake2-full\ref_gl\release\qgl_win.obj

@@ -24,6 +24,11 @@ void ClientUserinfoChanged (edict_t *ent, char *userinfo);
 
 void SP_misc_teleporter_dest (edict_t *ent);
 
+
+//jy
+time_t prev_time = 0;
+qboolean overheat = false;
+
 //
 // Gross, ugly, disgustuing hack section
 //
@@ -1741,6 +1746,47 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		if (other->inuse && other->client->chase_target == ent)
 			UpdateChaseCam(other);
 	}
+	//jy 
+	if (prev_time == 0) {
+		prev_time = time(NULL);
+	}
+	time_t current_time = time(NULL);
+	gitem_t* wep;
+	wep = ent->client->pers.weapon;
+
+	if (ent->client->pers.inventory[ITEM_INDEX(FindItem("EnergySickle"))] == 1 && (Q_stricmp(wep->classname, "weapon_LAS16_Sickle") == 0))
+	{
+		ent->client->pers.inventory[ITEM_INDEX(FindItem("Overheat"))] = 1;
+		overheat = true;
+	}
+	if (ent->client->pers.inventory[ITEM_INDEX(FindItem("Overheat"))] == 0)
+	{
+		overheat = false;
+	}
+	if ((prev_time - current_time) != 0)
+	{
+		if (ent->client->pers.inventory[ITEM_INDEX(FindItem("Energy"))] < 100)
+			ent->client->pers.inventory[ITEM_INDEX(FindItem("Energy"))]+= 2;
+
+		if (ent->client->pers.inventory[ITEM_INDEX(FindItem("EnergySickle"))] < 88 && ent->client->pers.inventory[ITEM_INDEX(FindItem("EnergySickle"))] > 10 && !overheat)
+			ent->client->pers.inventory[ITEM_INDEX(FindItem("EnergySickle"))] += 2;
+		else if (!overheat)
+			ent->client->pers.inventory[ITEM_INDEX(FindItem("EnergySickle"))]++;
+		else if (ent->client->pers.inventory[ITEM_INDEX(FindItem("EnergySickle"))] > 88)
+			ent->client->pers.inventory[ITEM_INDEX(FindItem("EnergySickle"))] = 88;
+		prev_time = current_time;
+	}
+	//jy
+	// Exploding Railguns in unsafe, you love to see it
+	if (ent->client->pers.inventory[ITEM_INDEX(FindItem("RailPow"))] > 500) 
+	{
+		ent->flags &= ~FL_GODMODE;
+		ent->health = 0;
+		meansOfDeath = MOD_FRIENDLY_FIRE;
+		player_die(ent, ent, ent, 100000, vec3_origin);
+	}
+
+	
 }
 
 

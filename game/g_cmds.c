@@ -17,8 +17,14 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-#include "g_local.h"
-#include "m_player.h"
+//#include "g_local.h"
+//#include "m_player.h"
+#include "f_mod.h"
+
+
+//jy
+qboolean stratagem = false;
+void Reload(edict_t* ent);
 
 
 char *ClientTeam (edict_t *ent)
@@ -400,6 +406,17 @@ void Cmd_Use_f (edict_t *ent)
 	char		*s;
 
 	s = gi.args();
+
+	//jy
+	if (Q_stricmp(s, "Primary") ==0|| Q_stricmp(s, "Secondary")==0 || Q_stricmp(s, "Stratagem")==0)
+	{
+		Use_Loadout(ent, s);
+		return;
+	}
+
+
+
+
 	it = FindItem (s);
 	if (!it)
 	{
@@ -482,7 +499,11 @@ void Cmd_Inven_f (edict_t *ent)
 	cl->showinventory = true;
 
 	gi.WriteByte (svc_inventory);
-	for (i=0 ; i<MAX_ITEMS ; i++)
+
+
+	gi.WriteShort(cl->pers.inventory[ITEM_INDEX(FindItem("Current Rounds"))]);
+
+	for (i=0 ; i<MAX_ITEMS-1 ; i++)
 	{
 		gi.WriteShort (cl->pers.inventory[i]);
 	}
@@ -666,6 +687,203 @@ void Cmd_PutAway_f (edict_t *ent)
 	ent->client->showhelp = false;
 	ent->client->showinventory = false;
 }
+
+//jy
+void Cmd_Spawn_f(edict_t* self)
+{
+	edict_t* ent;
+	VectorCopy(self->s.origin, ent->s.origin);
+	VectorCopy(self->s.angles, ent->s.angles);
+	ent = G_Spawn();
+	ent->classname = gi.argv(1);
+	ED_CallSpawn(ent);
+}
+//jy
+void Cmd_EnableStratagems(edict_t* ent)
+{
+	Allocate_Stratagem_Tree(ent);
+	if (!stratagem)
+	{
+		gi.cprintf(ent, PRINT_HIGH, "Stratagem Mode enabled\n");
+		stratagem = true;
+	}
+	else
+	{
+		gi.cprintf(ent, PRINT_HIGH, "Loadout Edit enabled\n");
+		stratagem = false;
+	}
+		
+	return;
+}
+//jy
+void Cmd_ListCount(edict_t* ent)
+{
+	for (int i = 0; i < game.num_items; i++)
+	{
+		char buffer[60];
+		itoa(ent->client->pers.inventory[i], buffer, 10);
+		gi.cprintf(ent ,PRINT_CHAT, buffer);
+		gi.cprintf(ent, PRINT_CHAT, " ");
+	}
+	gi.cprintf(ent, PRINT_CHAT, "\n");
+	
+}
+//jy
+void Cmd_IsMod(edict_t* ent)
+{
+	for (int i = 0; i < 5; i++)
+	{
+		enable_stratagems[i] = true;
+	}
+	gi.cprintf(ent, PRINT_CHAT, "We are in Helldivers2 Mod/ Test Enviro.\n");
+}
+//jy
+void Cmd_Reload_f(edict_t* ent)
+{
+	Reload(ent);
+}
+//jy
+int position_x = 0;
+int position_y = 0;
+void Edit_Loadout_f(edict_t* ent, int direction)
+{
+	switch (direction)
+	{
+	case	1://up
+	case	4://down
+		if (position_x == 0) // Primary
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				if (primary_wep[i])
+				{
+					position_y = i;
+				}
+			}
+			if (position_y == 3)
+				position_y = 0;
+			else
+				position_y++;
+			gi.cprintf(ent, PRINT_HIGH, "LoadoutEdit: %s to %s\n", loadout[position_x], primaries[position_y]);
+		}
+		else if (position_x == 1) // Secondary
+		{
+			for (int i = 0; i < 2; i++)
+			{
+				if (secondary_wep[i])
+				{
+					position_y = i;
+				}
+			}
+			if (position_y == 1)
+				position_y = 0;
+			else
+				position_y++;
+			gi.cprintf(ent, PRINT_HIGH, "LoadoutEdit: %s to %s\n", loadout[position_x], secondaries[position_y]);
+		}
+		else // Stratagem
+		{
+			Edit_Loadout(ent, loadout[position_x], position_x - 2);
+		}
+		break;
+
+	case	2://left
+		if (position_x == 0)
+			position_x = 6;
+		else
+			position_x--;
+		break;
+	case	3://right
+		if (position_x == 6)
+			position_x = 0;
+		else
+			position_x++;
+		break;
+
+	}
+	if(position_x >=2)
+		gi.cprintf(ent, PRINT_HIGH, "LoadoutEdit: Selecting Stratagem %s\n", stratagems[position_x-2]);
+	else
+	{
+		gi.cprintf(ent, PRINT_HIGH, "LoadoutEdit: Selecting %s\n", loadout[position_x]);
+		Edit_Loadout(ent, loadout[position_x], position_y);
+	}
+}
+
+//jy
+
+int strat_in[6];
+void Cmd_Stratagem_f(edict_t* ent,int direction)
+{
+	gitem_t* it;
+	int i;
+	//int pain[] = {
+	//	-1,-1,1,1,		//INIT
+	//	-1,-1,1,-1,		//RIGHT
+	//	-1,1,1,1,		//DOWN
+	//	2,-1,-1,-1,		//RIGHT RIGHT
+	//	1,-1,-1,1,		//DOWN LEFT
+	//	-1,-1,-1,-1,	//DOWN RIGHT
+	//	-1,-1,-1,-1,	//DOWN DOWN
+	//	-1,-1,-1,-1,	//DOWN LEFT UP
+	//	-1,-1,-1,-1,	//DOWN LEFT DOWN
+	//	-1,-1,-1,-1,	//DOWN RIGHT DOWN
+	//	-1,-1,-1,-1,	//DOWN DOWN UP
+	//};
+	if (!stratagem) {
+		Edit_Loadout_f(ent, direction);
+		return;
+	}
+	for ( i = 0; i < 6; i++)
+	{
+		if (strat_in[i] == 0)
+		{
+			strat_in[i] = direction;
+			break;
+		}
+	}
+	node* current;
+	current = traverse_strat_tree(strat_in, i+1, root);
+	if (current == NULL)
+	{
+		for (int j = 0; j < 6; j++)
+			strat_in[j] = 0;
+		gi.cprintf(ent, PRINT_HIGH, "Stratagem: \n" );
+		return;
+	}
+	else if (current->cmd)
+	{
+		gi.cprintf(ent, PRINT_HIGH, "Stratagem: %s\n", current->string);
+		gi.cprintf(ent, PRINT_HIGH, "Loadout Edit enabled\n");
+		stratagem = false;
+		give_Weap(ent, current->string);
+		for (int j = 0; j < 6; j++)
+			strat_in[j] = 0;
+		return;
+	}
+	else
+	{
+		gi.cprintf(ent, PRINT_HIGH, "%s\n", current->string);
+		return;
+	}
+}
+
+void Cmd_ListLoadout_f(edict_t * ent) {
+	for (int i = 0; i < 4; i++)
+	{
+		char* truth;
+		qboolean ans = primary_wep[i];
+		if (ans == true)
+			truth = "1";
+		else
+			truth = "0";
+		gi.cprintf(ent, PRINT_CHAT, truth);
+		gi.cprintf(ent, PRINT_CHAT, " ");
+	}
+	gi.cprintf(ent, PRINT_CHAT, "\n");
+}
+
+
 
 
 int PlayerSort (void const *a, void const *b)
@@ -943,50 +1161,71 @@ void ClientCommand (edict_t *ent)
 	if (level.intermissiontime)
 		return;
 
-	if (Q_stricmp (cmd, "use") == 0)
-		Cmd_Use_f (ent);
-	else if (Q_stricmp (cmd, "drop") == 0)
-		Cmd_Drop_f (ent);
-	else if (Q_stricmp (cmd, "give") == 0)
-		Cmd_Give_f (ent);
-	else if (Q_stricmp (cmd, "god") == 0)
-		Cmd_God_f (ent);
-	else if (Q_stricmp (cmd, "notarget") == 0)
-		Cmd_Notarget_f (ent);
-	else if (Q_stricmp (cmd, "noclip") == 0)
-		Cmd_Noclip_f (ent);
-	else if (Q_stricmp (cmd, "inven") == 0)
-		Cmd_Inven_f (ent);
-	else if (Q_stricmp (cmd, "invnext") == 0)
-		SelectNextItem (ent, -1);
-	else if (Q_stricmp (cmd, "invprev") == 0)
-		SelectPrevItem (ent, -1);
-	else if (Q_stricmp (cmd, "invnextw") == 0)
-		SelectNextItem (ent, IT_WEAPON);
-	else if (Q_stricmp (cmd, "invprevw") == 0)
-		SelectPrevItem (ent, IT_WEAPON);
-	else if (Q_stricmp (cmd, "invnextp") == 0)
-		SelectNextItem (ent, IT_POWERUP);
-	else if (Q_stricmp (cmd, "invprevp") == 0)
-		SelectPrevItem (ent, IT_POWERUP);
-	else if (Q_stricmp (cmd, "invuse") == 0)
-		Cmd_InvUse_f (ent);
-	else if (Q_stricmp (cmd, "invdrop") == 0)
-		Cmd_InvDrop_f (ent);
-	else if (Q_stricmp (cmd, "weapprev") == 0)
-		Cmd_WeapPrev_f (ent);
-	else if (Q_stricmp (cmd, "weapnext") == 0)
-		Cmd_WeapNext_f (ent);
-	else if (Q_stricmp (cmd, "weaplast") == 0)
-		Cmd_WeapLast_f (ent);
-	else if (Q_stricmp (cmd, "kill") == 0)
-		Cmd_Kill_f (ent);
-	else if (Q_stricmp (cmd, "putaway") == 0)
-		Cmd_PutAway_f (ent);
-	else if (Q_stricmp (cmd, "wave") == 0)
-		Cmd_Wave_f (ent);
+	if (Q_stricmp(cmd, "use") == 0)
+		Cmd_Use_f(ent);
+	else if (Q_stricmp(cmd, "drop") == 0)
+		Cmd_Drop_f(ent);
+	else if (Q_stricmp(cmd, "give") == 0)
+		Cmd_Give_f(ent);
+	else if (Q_stricmp(cmd, "god") == 0)
+		Cmd_God_f(ent);
+	else if (Q_stricmp(cmd, "notarget") == 0)
+		Cmd_Notarget_f(ent);
+	else if (Q_stricmp(cmd, "noclip") == 0)
+		Cmd_Noclip_f(ent);
+	else if (Q_stricmp(cmd, "inven") == 0)
+		Cmd_Inven_f(ent);
+	else if (Q_stricmp(cmd, "invnext") == 0)
+		SelectNextItem(ent, -1);
+	else if (Q_stricmp(cmd, "invprev") == 0)
+		SelectPrevItem(ent, -1);
+	else if (Q_stricmp(cmd, "invnextw") == 0)
+		SelectNextItem(ent, IT_WEAPON);
+	else if (Q_stricmp(cmd, "invprevw") == 0)
+		SelectPrevItem(ent, IT_WEAPON);
+	else if (Q_stricmp(cmd, "invnextp") == 0)
+		SelectNextItem(ent, IT_POWERUP);
+	else if (Q_stricmp(cmd, "invprevp") == 0)
+		SelectPrevItem(ent, IT_POWERUP);
+	else if (Q_stricmp(cmd, "invuse") == 0)
+		Cmd_InvUse_f(ent);
+	else if (Q_stricmp(cmd, "invdrop") == 0)
+		Cmd_InvDrop_f(ent);
+	else if (Q_stricmp(cmd, "weapprev") == 0)
+		Cmd_WeapPrev_f(ent);
+	else if (Q_stricmp(cmd, "weapnext") == 0)
+		Cmd_WeapNext_f(ent);
+	else if (Q_stricmp(cmd, "weaplast") == 0)
+		Cmd_WeapLast_f(ent);
+	else if (Q_stricmp(cmd, "kill") == 0)
+		Cmd_Kill_f(ent);
+	else if (Q_stricmp(cmd, "putaway") == 0)
+		Cmd_PutAway_f(ent);
+	else if (Q_stricmp(cmd, "wave") == 0)
+		Cmd_Wave_f(ent);
 	else if (Q_stricmp(cmd, "playerlist") == 0)
 		Cmd_PlayerList_f(ent);
+	//jy
+	else if (Q_stricmp(cmd, "spawn") == 0)
+		Cmd_Spawn_f(ent);
+	else if (Q_stricmp(cmd, "stratagem") == 0)
+		Cmd_EnableStratagems(ent);
+	else if (Q_stricmp(cmd, "item_listcount") == 0)
+		Cmd_ListCount(ent);
+	else if (Q_stricmp(cmd, "ismod") == 0)
+		Cmd_IsMod(ent);
+	else if (Q_stricmp(cmd, "reload") == 0)
+		Cmd_Reload_f(ent);
+	else if (Q_stricmp(cmd, "up") == 0)
+		Cmd_Stratagem_f(ent, 1);
+	else if (Q_stricmp(cmd, "left") == 0)
+		Cmd_Stratagem_f(ent, 2);
+	else if (Q_stricmp(cmd, "right") == 0)
+		Cmd_Stratagem_f(ent, 3);
+	else if (Q_stricmp(cmd, "down") == 0)
+		Cmd_Stratagem_f(ent, 4);
+	else if (Q_stricmp(cmd, "lsloadout") == 0)
+		Cmd_ListLoadout_f(ent);
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
 }

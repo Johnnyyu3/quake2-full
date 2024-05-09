@@ -688,19 +688,30 @@ void Cmd_PutAway_f (edict_t *ent)
 	ent->client->showinventory = false;
 }
 
+
+//jy
+void Cmd_ListGeneratedStratagem_f(edict_t *ent)
+{
+	objective_type = 1;
+	objective = true;
+	DoStratagem(ent);
+	gi.cprintf(ent, PRINT_CHAT, "%s", strStratagem());
+}
 //jy
 void Cmd_Spawn_f(edict_t* self)
 {
 	edict_t* ent;
+	ent = G_Spawn();
+
 	VectorCopy(self->s.origin, ent->s.origin);
 	VectorCopy(self->s.angles, ent->s.angles);
-	ent = G_Spawn();
 	ent->classname = gi.argv(1);
 	ED_CallSpawn(ent);
 }
 //jy
 void Cmd_EnableStratagems(edict_t* ent)
 {
+	objective = true;
 	Allocate_Stratagem_Tree(ent);
 	if (!stratagem)
 	{
@@ -811,8 +822,69 @@ void Edit_Loadout_f(edict_t* ent, int direction)
 }
 
 //jy
+void Cmd_EnableObjective_f(edict_t* ent)
+{
+	objective_type = gen_randint(true, 3, 0);
+	switch (objective_type)
+	{
+	case 0:
+		KillEnemies(ent);
+		break;
+	case 1:
+		DoStratagem(ent);
+		break;
+	case 2:
+		DoStratagemAndSurvive(ent);
+		break;
+	}
+	Allocate_Stratagem_Tree(ent);
+}
 
-int strat_in[6];
+void CompleteObjective_f(edict_t* ent)
+{
+	if (objective_type == 1)
+	{
+		gi.cprintf(ent, PRINT_HIGH, "Congratulations for completing the Stratagem\n");
+		if (obj_left == 0)
+		{
+			MissionComplete(ent);
+		}
+		else
+		{
+			gi.cprintf(ent, PRINT_HIGH, "It appears they've heard you.\n");
+			SpawnPatrolCluster(ent);
+			--obj_left;
+		}
+	}
+	else if (objective_type == 2)
+	{
+		if (obj_left == 1)
+		{
+			gi.cprintf(ent, PRINT_HIGH, "It appears they've heard you.\n");
+			SpawnPatrolCluster(ent);
+			--obj_left;
+			quest_secondary[0] = 0;
+		}
+		else
+		{
+			MissionComplete(ent);
+		}
+	}
+	else if (objective_type == 0)
+	{
+		MissionComplete(ent);
+	}
+}
+
+void Cmd_SpawnPatrol_f(edict_t *ent)
+{
+	SpawnPatrolCluster(ent);
+}
+
+
+//jy
+
+int strat_in[10];
 void Cmd_Stratagem_f(edict_t* ent,int direction)
 {
 	gitem_t* it;
@@ -834,7 +906,7 @@ void Cmd_Stratagem_f(edict_t* ent,int direction)
 		Edit_Loadout_f(ent, direction);
 		return;
 	}
-	for ( i = 0; i < 6; i++)
+	for ( i = 0; i < 10; i++)
 	{
 		if (strat_in[i] == 0)
 		{
@@ -846,7 +918,7 @@ void Cmd_Stratagem_f(edict_t* ent,int direction)
 	current = traverse_strat_tree(strat_in, i+1, root);
 	if (current == NULL)
 	{
-		for (int j = 0; j < 6; j++)
+		for (int j = 0; j < 10; j++)
 			strat_in[j] = 0;
 		gi.cprintf(ent, PRINT_HIGH, "Stratagem: \n" );
 		return;
@@ -856,9 +928,21 @@ void Cmd_Stratagem_f(edict_t* ent,int direction)
 		gi.cprintf(ent, PRINT_HIGH, "Stratagem: %s\n", current->string);
 		gi.cprintf(ent, PRINT_HIGH, "Loadout Edit enabled\n");
 		stratagem = false;
-		give_Weap(ent, current->string);
-		for (int j = 0; j < 6; j++)
+		for (int j = 0; j < 10; j++)
 			strat_in[j] = 0;
+		if(Q_stricmp(current->string, "Objective Stratagem") == 0)
+		{
+			CompleteObjective_f(ent);
+			return;
+		}
+		else if (Q_stricmp(current->string, "Ammo") == 0)
+		{
+			Add_Ammo(ent, ent->client->pers.weapon, 50);
+			return;
+		}
+
+		give_Weap(ent, current->string);
+
 		return;
 	}
 	else
@@ -868,6 +952,7 @@ void Cmd_Stratagem_f(edict_t* ent,int direction)
 	}
 }
 
+//jy
 void Cmd_ListLoadout_f(edict_t * ent) {
 	for (int i = 0; i < 4; i++)
 	{
@@ -1226,6 +1311,12 @@ void ClientCommand (edict_t *ent)
 		Cmd_Stratagem_f(ent, 4);
 	else if (Q_stricmp(cmd, "lsloadout") == 0)
 		Cmd_ListLoadout_f(ent);
+	else if (Q_stricmp(cmd, "enable_obj") == 0)
+		Cmd_EnableObjective_f(ent);
+	else if (Q_stricmp(cmd, "spawn_patrol") == 0)
+		Cmd_SpawnPatrol_f(ent);
+	else if (Q_stricmp(cmd, "ls_genstrat") == 0)
+		Cmd_ListGeneratedStratagem_f(ent);
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
 }

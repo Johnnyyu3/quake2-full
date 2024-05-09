@@ -17,8 +17,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-#include "g_local.h"
-#include "m_player.h"
+#include "f_mod.h"
 
 void ClientUserinfoChanged (edict_t *ent, char *userinfo);
 
@@ -1785,6 +1784,30 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		meansOfDeath = MOD_FRIENDLY_FIRE;
 		player_die(ent, ent, ent, 100000, vec3_origin);
 	}
+	//jy
+	if (past_time == 0)
+	{
+		past_time = level.time;
+	}
+	if (obj_strat_done != NULL && obj_strat_done == true && objective_type == 2)
+	{
+		if (past_time + 1 < level.time)
+		{
+			time_left--;
+			past_time = level.time;
+		}
+		if (last_patrol + 20 < level.time)
+			SpawnPatrolCluster(ent);
+	}
+	if (objective_type == 0 && level.killed_monsters >= 100)
+	{
+		CompleteObjective_f(ent);
+	}
+	if (objective_type == 0 && last_patrol + 10 < level.time)
+	{
+		SpawnPatrolCluster(ent);
+	}
+	
 
 	
 }

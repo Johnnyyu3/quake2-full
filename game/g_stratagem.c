@@ -1,7 +1,12 @@
 
 #include "f_mod.h"
+objective = false;
+
+
 struct node* createNode(char* value, qboolean cmd) {
 	struct node* newNode = malloc(sizeof(struct node));
+	if (newNode == NULL)
+		return NULL;
 	newNode->string = value;
 	newNode->cmd = cmd;
 	newNode->left = NULL;
@@ -65,7 +70,11 @@ void insert_stratagem(node* root, enum Arrows* dir, int len, char* item_name)
 }
 
 void Allocate_Stratagem_Tree(edict_t* ent) {
-	root = createNode("Stratagem: ", false);
+	if(root == NULL)
+		root = createNode("Stratagem: ", false);
+
+	enum Arrows RS_strat[] = { DOWN, DOWN,UP, RIGHT};
+	insert_stratagem(root, RS_strat, 4, "Ammo");
 
 	if (enable_stratagems[0])
 	{
@@ -97,7 +106,10 @@ void Allocate_Stratagem_Tree(edict_t* ent) {
 		insert_stratagem(root, OPS_strat, 3, "Orbital Precision Strike");
 	}
 
-
+	if (objective == true)
+	{
+		insert_stratagem(root, obj_stratagem, obj_len, "Objective Stratagem");
+	}
 
 }
 

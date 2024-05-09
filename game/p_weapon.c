@@ -25,8 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 static qboolean	is_quad;
 static byte		is_silenced;
-//jy
-time_t time;
+
 
 void weapon_grenade_fire (edict_t *ent, qboolean held);
 

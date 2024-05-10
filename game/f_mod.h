@@ -67,6 +67,8 @@ float past_time;
 
 int gen_randint(qboolean abs, int range, int offset);
 
+
+void UpdateQuest();
 char* strStratagem();
 void GenerateStratagem();
 void KillEnemies(edict_t* ent);

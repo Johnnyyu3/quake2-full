@@ -864,7 +864,9 @@ void CompleteObjective_f(edict_t* ent)
 			gi.cprintf(ent, PRINT_HIGH, "It appears they've heard you.\n");
 			SpawnPatrolCluster(ent);
 			--obj_left;
+			obj_strat_done = true;
 			quest_secondary[0] = 0;
+			UpdateQuest();
 		}
 		else
 		{
@@ -880,6 +882,14 @@ void CompleteObjective_f(edict_t* ent)
 void Cmd_SpawnPatrol_f(edict_t *ent)
 {
 	SpawnPatrolCluster(ent);
+}
+
+void Cmd_printobjflag_f(edict_t* ent)
+{
+	if(obj_strat_done == true)
+		gi.cprintf(ent, PRINT_HIGH, "obj_strat_done is true\n");
+	else
+		gi.cprintf(ent, PRINT_HIGH, "obj_strat_done is false\n");
 }
 
 //jy
@@ -1334,6 +1344,8 @@ void ClientCommand (edict_t *ent)
 		Cmd_PrintAmmoType(ent);
 	else if (Q_stricmp(cmd, "init_loadout") == 0)
 		Cmd_InitLoadout_f(ent);
+	else if (Q_stricmp(cmd, "isflagtrue") == 0)
+		Cmd_printobjflag_f(ent);
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
 }

@@ -1,6 +1,5 @@
 #include "f_mod.h"
 
-obj_strat_done = false;
 int objective_type = -1;
 
 

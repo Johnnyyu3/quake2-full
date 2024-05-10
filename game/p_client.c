@@ -28,6 +28,7 @@ void SP_misc_teleporter_dest (edict_t *ent);
 time_t prev_time = 0;
 qboolean overheat = false;
 
+
 //
 // Gross, ugly, disgustuing hack section
 //
@@ -1785,16 +1786,13 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		player_die(ent, ent, ent, 100000, vec3_origin);
 	}
 	//jy
-	if (past_time == 0)
-	{
-		past_time = level.time;
-	}
-	if (obj_strat_done != NULL && obj_strat_done == true && objective_type == 2)
+	if (obj_strat_done == true && objective_type == 2)
 	{
 		if (past_time + 1 < level.time)
 		{
 			time_left--;
 			past_time = level.time;
+			UpdateQuest();
 		}
 		if (last_patrol + 20 < level.time)
 			SpawnPatrolCluster(ent);

@@ -23,7 +23,7 @@ typedef struct node {
 
 node* root;
 
-
+int strat_cd[6];
 char* loadout[7];
 char* primaries[4];
 char* secondaries[2];
@@ -33,7 +33,7 @@ qboolean primary_wep[4];
 qboolean secondary_wep[2];
 qboolean stratagem_wep[4];
 void Reload(edict_t* ent);
-void Give_Reload(edict_t* ent);
+void Give_Reload(edict_t* ent, char* s);
 void change_ammo_count(edict_t* ent, int g_ammo);
 
 void Init_Loadout(edict_t* ent, char* s);
@@ -61,6 +61,8 @@ char quest_secondary[200];
 time_t last_patrol;
 int time_left;
 float past_time;
+
+
 
 
 int gen_randint(qboolean abs, int range, int offset);

@@ -500,10 +500,10 @@ void Cmd_Inven_f (edict_t *ent)
 
 	gi.WriteByte (svc_inventory);
 
+	//jy
+	//gi.WriteShort(cl->pers.inventory[ITEM_INDEX(FindItem("Current Rounds")) - 1]);
 
-	gi.WriteShort(cl->pers.inventory[ITEM_INDEX(FindItem("Current Rounds"))]);
-
-	for (i=0 ; i<MAX_ITEMS-1 ; i++)
+	for (i=0 ; i<MAX_ITEMS; i++)
 	{
 		gi.WriteShort (cl->pers.inventory[i]);
 	}
@@ -795,6 +795,7 @@ void Edit_Loadout_f(edict_t* ent, int direction)
 		else // Stratagem
 		{
 			Edit_Loadout(ent, loadout[position_x], position_x - 2);
+			return;
 		}
 		break;
 
@@ -839,7 +840,7 @@ void Cmd_EnableObjective_f(edict_t* ent)
 	}
 	Allocate_Stratagem_Tree(ent);
 }
-
+//jy
 void CompleteObjective_f(edict_t* ent)
 {
 	if (objective_type == 1)
@@ -875,10 +876,17 @@ void CompleteObjective_f(edict_t* ent)
 		MissionComplete(ent);
 	}
 }
-
+//jy
 void Cmd_SpawnPatrol_f(edict_t *ent)
 {
 	SpawnPatrolCluster(ent);
+}
+
+//jy
+void Cmd_InitLoadout_f(edict_t *ent) 
+{
+	Init_Loadout(ent, "Primary");
+	Init_Loadout(ent, "Secondary");
 }
 
 
@@ -950,6 +958,11 @@ void Cmd_Stratagem_f(edict_t* ent,int direction)
 		gi.cprintf(ent, PRINT_HIGH, "%s\n", current->string);
 		return;
 	}
+}
+
+void Cmd_PrintAmmoType(edict_t* ent)
+{
+	gi.cprintf(ent, PRINT_HIGH, "index: %d, name: %s \n", ent->client->ammo_index, itemlist[ent->client->ammo_index].classname);
 }
 
 //jy
@@ -1317,6 +1330,10 @@ void ClientCommand (edict_t *ent)
 		Cmd_SpawnPatrol_f(ent);
 	else if (Q_stricmp(cmd, "ls_genstrat") == 0)
 		Cmd_ListGeneratedStratagem_f(ent);
+	else if (Q_stricmp(cmd, "ls_ammo") == 0)
+		Cmd_PrintAmmoType(ent);
+	else if (Q_stricmp(cmd, "init_loadout") == 0)
+		Cmd_InitLoadout_f(ent);
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
 }

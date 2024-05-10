@@ -329,7 +329,7 @@ void HelpComputer (edict_t *ent)
 	//	level.killed_monsters, level.total_monsters, 
 	//	level.found_goals, level.total_goals,
 	//	level.found_secrets, level.total_secrets);
-
+	//jy
 	Com_sprintf(string, sizeof(string),
 		"xv 32 yv 8 picn help "			// background
 		"xv 202 yv 12 string2 \"%s\" "		// skill

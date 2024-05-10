@@ -1765,11 +1765,11 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 	if ((prev_time - current_time) != 0)
 	{
 		if (ent->client->pers.inventory[ITEM_INDEX(FindItem("Energy"))] < 100)
-			ent->client->pers.inventory[ITEM_INDEX(FindItem("Energy"))]+= 2;
+			ent->client->pers.inventory[ITEM_INDEX(FindItem("Energy")) ]+= 2;
 
 		if (ent->client->pers.inventory[ITEM_INDEX(FindItem("EnergySickle"))] < 88 && ent->client->pers.inventory[ITEM_INDEX(FindItem("EnergySickle"))] > 10 && !overheat)
 			ent->client->pers.inventory[ITEM_INDEX(FindItem("EnergySickle"))] += 2;
-		else if (!overheat)
+		else if (!overheat && ent->client->pers.inventory[ITEM_INDEX(FindItem("EnergySickle"))] <=10)
 			ent->client->pers.inventory[ITEM_INDEX(FindItem("EnergySickle"))]++;
 		else if (ent->client->pers.inventory[ITEM_INDEX(FindItem("EnergySickle"))] > 88)
 			ent->client->pers.inventory[ITEM_INDEX(FindItem("EnergySickle"))] = 88;
@@ -1777,7 +1777,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 	}
 	//jy
 	// Exploding Railguns in unsafe, you love to see it
-	if (ent->client->pers.inventory[ITEM_INDEX(FindItem("RailPow"))] > 500) 
+	if (ent->client->pers.inventory[ITEM_INDEX(FindItem("RailPow"))-1] > 500) 
 	{
 		ent->flags &= ~FL_GODMODE;
 		ent->health = 0;

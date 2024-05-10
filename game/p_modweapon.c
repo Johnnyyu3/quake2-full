@@ -62,7 +62,7 @@ void Reload(edict_t* ent)
 		}
 		ent->client->pers.inventory[ITEM_INDEX(FindItem("EnergySickle"))] = 88;
 		ent->client->pers.inventory[ITEM_INDEX(FindItem("Sickle Mag"))]--;
-		ent->client->pers.inventory[ITEM_INDEX(FindItem("Overheat"))] = 0;
+		ent->client->pers.inventory[ITEM_INDEX(FindItem("Overheat"))] -= 0;
 	}
 	else if (Q_stricmp(wep->classname, "weapon_Redeemer") == 0)
 	{

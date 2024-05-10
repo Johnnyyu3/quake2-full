@@ -476,6 +476,16 @@ qboolean Add_Ammo (edict_t *ent, gitem_t *item, int count)
 		max = ent->client->pers.max_cells;
 	else if (item->tag == AMMO_SLUGS)
 		max = ent->client->pers.max_slugs;
+	else if (item->tag == 5)
+		max = 100;
+	else if (item->tag == 6)
+		max = 100;
+	else if (item->tag == 7)
+		max = 6;
+	else if (item->tag == 8)
+		max = 1;
+	else if (item->tag == 9)
+		max = 100;
 	else
 		return false;
 
@@ -1671,481 +1681,12 @@ always owned, never in the world
 	},
 
 
-	//
-	// POWERUP ITEMS
-	//
-/*QUAKED item_quad (.3 .3 1) (-16 -16 -16) (16 16 16)
-*/
-	{
-		"item_quad", 
-		Pickup_Powerup,
-		Use_Quad,
-		Drop_General,
-		NULL,
-		"items/pkup.wav",
-		"models/items/quaddama/tris.md2", EF_ROTATE,
-		NULL,
-/* icon */		"p_quad",
-/* pickup */	"Quad Damage",
-/* width */		2,
-		60,
-		NULL,
-		IT_POWERUP,
-		0,
-		NULL,
-		0,
-/* precache */ "items/damage.wav items/damage2.wav items/damage3.wav"
-	},
 
-/*QUAKED item_invulnerability (.3 .3 1) (-16 -16 -16) (16 16 16)
-*/
-	{
-		"item_invulnerability",
-		Pickup_Powerup,
-		Use_Invulnerability,
-		Drop_General,
-		NULL,
-		"items/pkup.wav",
-		"models/items/invulner/tris.md2", EF_ROTATE,
-		NULL,
-/* icon */		"p_invulnerability",
-/* pickup */	"Invulnerability",
-/* width */		2,
-		300,
-		NULL,
-		IT_POWERUP,
-		0,
-		NULL,
-		0,
-/* precache */ "items/protect.wav items/protect2.wav items/protect4.wav"
-	},
 
-/*QUAKED item_silencer (.3 .3 1) (-16 -16 -16) (16 16 16)
-*/
-	{
-		"item_silencer",
-		Pickup_Powerup,
-		Use_Silencer,
-		Drop_General,
-		NULL,
-		"items/pkup.wav",
-		"models/items/silencer/tris.md2", EF_ROTATE,
-		NULL,
-/* icon */		"p_silencer",
-/* pickup */	"Silencer",
-/* width */		2,
-		60,
-		NULL,
-		IT_POWERUP,
-		0,
-		NULL,
-		0,
-/* precache */ ""
-	},
-
-/*QUAKED item_breather (.3 .3 1) (-16 -16 -16) (16 16 16)
-*/
-	{
-		"item_breather",
-		Pickup_Powerup,
-		Use_Breather,
-		Drop_General,
-		NULL,
-		"items/pkup.wav",
-		"models/items/breather/tris.md2", EF_ROTATE,
-		NULL,
-/* icon */		"p_rebreather",
-/* pickup */	"Rebreather",
-/* width */		2,
-		60,
-		NULL,
-		IT_STAY_COOP|IT_POWERUP,
-		0,
-		NULL,
-		0,
-/* precache */ "items/airout.wav"
-	},
-
-/*QUAKED item_enviro (.3 .3 1) (-16 -16 -16) (16 16 16)
-*/
-	{
-		"item_enviro",
-		Pickup_Powerup,
-		Use_Envirosuit,
-		Drop_General,
-		NULL,
-		"items/pkup.wav",
-		"models/items/enviro/tris.md2", EF_ROTATE,
-		NULL,
-/* icon */		"p_envirosuit",
-/* pickup */	"Environment Suit",
-/* width */		2,
-		60,
-		NULL,
-		IT_STAY_COOP|IT_POWERUP,
-		0,
-		NULL,
-		0,
-/* precache */ "items/airout.wav"
-	},
-
-/*QUAKED item_ancient_head (.3 .3 1) (-16 -16 -16) (16 16 16)
-Special item that gives +2 to maximum health
-*/
-	{
-		"item_ancient_head",
-		Pickup_AncientHead,
-		NULL,
-		NULL,
-		NULL,
-		"items/pkup.wav",
-		"models/items/c_head/tris.md2", EF_ROTATE,
-		NULL,
-/* icon */		"i_fixme",
-/* pickup */	"Ancient Head",
-/* width */		2,
-		60,
-		NULL,
-		0,
-		0,
-		NULL,
-		0,
-/* precache */ ""
-	},
-
-/*QUAKED item_adrenaline (.3 .3 1) (-16 -16 -16) (16 16 16)
-gives +1 to maximum health
-*/
-	{
-		"item_adrenaline",
-		Pickup_Adrenaline,
-		NULL,
-		NULL,
-		NULL,
-		"items/pkup.wav",
-		"models/items/adrenal/tris.md2", EF_ROTATE,
-		NULL,
-/* icon */		"p_adrenaline",
-/* pickup */	"Adrenaline",
-/* width */		2,
-		60,
-		NULL,
-		0,
-		0,
-		NULL,
-		0,
-/* precache */ ""
-	},
-
-/*QUAKED item_bandolier (.3 .3 1) (-16 -16 -16) (16 16 16)
-*/
-	{
-		"item_bandolier",
-		Pickup_Bandolier,
-		NULL,
-		NULL,
-		NULL,
-		"items/pkup.wav",
-		"models/items/band/tris.md2", EF_ROTATE,
-		NULL,
-/* icon */		"p_bandolier",
-/* pickup */	"Bandolier",
-/* width */		2,
-		60,
-		NULL,
-		0,
-		0,
-		NULL,
-		0,
-/* precache */ ""
-	},
-
-/*QUAKED item_pack (.3 .3 1) (-16 -16 -16) (16 16 16)
-*/
-	{
-		"item_pack",
-		Pickup_Pack,
-		NULL,
-		NULL,
-		NULL,
-		"items/pkup.wav",
-		"models/items/pack/tris.md2", EF_ROTATE,
-		NULL,
-/* icon */		"i_pack",
-/* pickup */	"Ammo Pack",
-/* width */		2,
-		180,
-		NULL,
-		0,
-		0,
-		NULL,
-		0,
-/* precache */ ""
-	},
-
-	//
-	// KEYS
-	//
-/*QUAKED key_data_cd (0 .5 .8) (-16 -16 -16) (16 16 16)
-key for computer centers
-*/
-	{
-		"key_data_cd",
-		Pickup_Key,
-		NULL,
-		Drop_General,
-		NULL,
-		"items/pkup.wav",
-		"models/items/keys/data_cd/tris.md2", EF_ROTATE,
-		NULL,
-		"k_datacd",
-		"Data CD",
-		2,
-		0,
-		NULL,
-		IT_STAY_COOP|IT_KEY,
-		0,
-		NULL,
-		0,
-/* precache */ ""
-	},
-
-/*QUAKED key_power_cube (0 .5 .8) (-16 -16 -16) (16 16 16) TRIGGER_SPAWN NO_TOUCH
-warehouse circuits
-*/
-	{
-		"key_power_cube",
-		Pickup_Key,
-		NULL,
-		Drop_General,
-		NULL,
-		"items/pkup.wav",
-		"models/items/keys/power/tris.md2", EF_ROTATE,
-		NULL,
-		"k_powercube",
-		"Power Cube",
-		2,
-		0,
-		NULL,
-		IT_STAY_COOP|IT_KEY,
-		0,
-		NULL,
-		0,
-/* precache */ ""
-	},
-
-/*QUAKED key_pyramid (0 .5 .8) (-16 -16 -16) (16 16 16)
-key for the entrance of jail3
-*/
-	{
-		"key_pyramid",
-		Pickup_Key,
-		NULL,
-		Drop_General,
-		NULL,
-		"items/pkup.wav",
-		"models/items/keys/pyramid/tris.md2", EF_ROTATE,
-		NULL,
-		"k_pyramid",
-		"Pyramid Key",
-		2,
-		0,
-		NULL,
-		IT_STAY_COOP|IT_KEY,
-		0,
-		NULL,
-		0,
-/* precache */ ""
-	},
-
-/*QUAKED key_data_spinner (0 .5 .8) (-16 -16 -16) (16 16 16)
-key for the city computer
-*/
-	{
-		"key_data_spinner",
-		Pickup_Key,
-		NULL,
-		Drop_General,
-		NULL,
-		"items/pkup.wav",
-		"models/items/keys/spinner/tris.md2", EF_ROTATE,
-		NULL,
-		"k_dataspin",
-		"Data Spinner",
-		2,
-		0,
-		NULL,
-		IT_STAY_COOP|IT_KEY,
-		0,
-		NULL,
-		0,
-/* precache */ ""
-	},
-
-/*QUAKED key_pass (0 .5 .8) (-16 -16 -16) (16 16 16)
-security pass for the security level
-*/
-	{
-		"key_pass",
-		Pickup_Key,
-		NULL,
-		Drop_General,
-		NULL,
-		"items/pkup.wav",
-		"models/items/keys/pass/tris.md2", EF_ROTATE,
-		NULL,
-		"k_security",
-		"Security Pass",
-		2,
-		0,
-		NULL,
-		IT_STAY_COOP|IT_KEY,
-		0,
-		NULL,
-		0,
-/* precache */ ""
-	},
-
-/*QUAKED key_blue_key (0 .5 .8) (-16 -16 -16) (16 16 16)
-normal door key - blue
-*/
-	{
-		"key_blue_key",
-		Pickup_Key,
-		NULL,
-		Drop_General,
-		NULL,
-		"items/pkup.wav",
-		"models/items/keys/key/tris.md2", EF_ROTATE,
-		NULL,
-		"k_bluekey",
-		"Blue Key",
-		2,
-		0,
-		NULL,
-		IT_STAY_COOP|IT_KEY,
-		0,
-		NULL,
-		0,
-/* precache */ ""
-	},
-
-/*QUAKED key_red_key (0 .5 .8) (-16 -16 -16) (16 16 16)
-normal door key - red
-*/
-	{
-		"key_red_key",
-		Pickup_Key,
-		NULL,
-		Drop_General,
-		NULL,
-		"items/pkup.wav",
-		"models/items/keys/red_key/tris.md2", EF_ROTATE,
-		NULL,
-		"k_redkey",
-		"Red Key",
-		2,
-		0,
-		NULL,
-		IT_STAY_COOP|IT_KEY,
-		0,
-		NULL,
-		0,
-/* precache */ ""
-	},
-
-/*QUAKED key_commander_head (0 .5 .8) (-16 -16 -16) (16 16 16)
-tank commander's head
-*/
-	{
-		"key_commander_head",
-		Pickup_Key,
-		NULL,
-		Drop_General,
-		NULL,
-		"items/pkup.wav",
-		"models/monsters/commandr/head/tris.md2", EF_GIB,
-		NULL,
-/* icon */		"k_comhead",
-/* pickup */	"Commander's Head",
-/* width */		2,
-		0,
-		NULL,
-		IT_STAY_COOP|IT_KEY,
-		0,
-		NULL,
-		0,
-/* precache */ ""
-	},
-
-/*QUAKED key_airstrike_target (0 .5 .8) (-16 -16 -16) (16 16 16)
-tank commander's head
-*/
-	{
-		"key_airstrike_target",
-		Pickup_Key,
-		NULL,
-		Drop_General,
-		NULL,
-		"items/pkup.wav",
-		"models/items/keys/target/tris.md2", EF_ROTATE,
-		NULL,
-/* icon */		"i_airstrike",
-/* pickup */	"Airstrike Marker",
-/* width */		2,
-		0,
-		NULL,
-		IT_STAY_COOP|IT_KEY,
-		0,
-		NULL,
-		0,
-/* precache */ ""
-	},
+	//jy ##23
 
 	{
-		NULL,
-		Pickup_Health,
-		NULL,
-		NULL,
-		NULL,
-		"items/pkup.wav",
-		NULL, 0,
-		NULL,
-/* icon */		"i_health",
-/* pickup */	"Health",
-/* width */		3,
-		0,
-		NULL,
-		0,
-		0,
-		NULL,
-		0,
-/* precache */ "items/s_health.wav items/n_health.wav items/l_health.wav items/m_health.wav"
-	},
-
-	//jy
-	{
-		"weapon_LAS16_Sickle",
-		Pickup_Weapon,
-		Use_Weapon,
-		Drop_Weapon,
-		Weapon_Sickle,
-		"misc/w_pkup.wav",
-		"models/weapons/g_hyperb/tris.md2", EF_ROTATE,
-		"models/weapons/v_hyperb/tris.md2",
-/* icon */		"w_hyperblaster",
-/* pickup */	"Sickle",
-				0,
-				1,
-				"EnergySickle",
-				IT_WEAPON | IT_STAY_COOP,
-				WEAP_HYPERBLASTER,
-				NULL,
-				0,
-/* precache */ "weapons/hyprbu1a.wav weapons/hyprbl1a.wav weapons/hyprbf1a.wav weapons/hyprbd1a.wav misc/lasfly.wav"
-	},
-	{
-		"ammo_energy",
+		"ammo_energy_quasar",
 		Pickup_Ammo,
 		NULL,
 		Drop_Ammo,
@@ -2184,8 +1725,70 @@ tank commander's head
 						5,
 /* precache */ ""
 	},
+
 	{
-		"ammo_energy_sickle_mag",
+		"ammo_sicklemag",
+		Pickup_Ammo,
+		NULL,
+		Drop_Ammo,
+		NULL,
+		"misc/am_pkup.wav",
+		"models/items/ammo/cells/medium/tris.md2", 0,
+		NULL,
+	/* icon */		"a_cells",
+	/* pickup */	"Sickle Mag",
+	/* width */		3,
+					6,
+					NULL,
+					IT_AMMO,
+					0,
+					NULL,
+					7,
+/* precache */ ""
+		},
+			{
+		"key_overheat_flag",
+		Pickup_Key,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/keys/data_cd/tris.md2", EF_ROTATE,
+		NULL,
+		"k_datacd",
+		"Overheat",
+/* width */		3,
+				100,
+				NULL,
+				IT_AMMO,
+						0,
+						NULL,
+						5,
+/* precache */ ""
+
+	},
+	{
+		"ammo_mag",
+		Pickup_Ammo,
+		NULL,
+		Drop_Ammo,
+		NULL,
+		"misc/am_pkup.wav",
+		"models/items/ammo/cells/medium/tris.md2", 0,
+		NULL,
+		/* icon */		"a_rockets",
+		/* pickup */	"Current Rounds",
+		/* width */		3,
+				100,
+				NULL,
+				IT_AMMO,
+				0,
+				NULL,
+				5,
+				/* precache */ ""
+	},
+			{
+		"ammo_power",
 		Pickup_Ammo,
 		NULL,
 		Drop_Ammo,
@@ -2194,17 +1797,38 @@ tank commander's head
 		"models/items/ammo/cells/medium/tris.md2", 0,
 		NULL,
 		/* icon */		"a_cells",
-		/* pickup */	"Sickle Mag",
+		/* pickup */	"RailPow",
 		/* width */		3,
-						6,
+						100,
 						NULL,
 						IT_AMMO,
 						0,
 						NULL,
-						7,
-/* precache */ ""
-	},
-	{
+						5,
+						/* precache */ ""
+			},
+				{
+		"ammo_ac",
+		Pickup_Ammo,
+		NULL,
+		Drop_Ammo,
+		NULL,
+		"misc/am_pkup.wav",
+		"models/items/ammo/cells/medium/tris.md2", 0,
+		NULL,
+		/* icon */		"a_rockets",
+		/* pickup */	"AutoCannon Rounds",
+		/* width */		3,
+						100,
+						NULL,
+						IT_AMMO,
+						0,
+						NULL,
+						5,
+						/* precache */ ""
+				},
+
+			{
 		"weapon_Redeemer",
 		Pickup_Weapon,
 		Use_Weapon,
@@ -2213,18 +1837,37 @@ tank commander's head
 		"misc/w_pkup.wav",
 		"models/weapons/g_machn/tris.md2", EF_ROTATE,
 		"models/weapons/v_blast/tris.md2",
-/* icon */		"w_blaster",
-/* pickup */	"Redeemer",
-				0,
-				1,
-				"Bullets",
-				IT_WEAPON | IT_STAY_COOP,
-				WEAP_BLASTER,
-				NULL,
-				0,
-/* precache */ "weapons/chngnu1a.wav weapons/chngnl1a.wav weapons/machgf3b.wav` weapons/chngnd1a.wav"
-	},
-
+		/* icon */		"w_blaster",
+		/* pickup */	"Redeemer",
+						0,
+						1,
+						"Bullets",
+						IT_WEAPON | IT_STAY_COOP,
+						WEAP_BLASTER,
+						NULL,
+						0,
+						/* precache */ "weapons/chngnu1a.wav weapons/chngnl1a.wav weapons/machgf3b.wav` weapons/chngnd1a.wav"
+			},
+			{
+		"weapon_LAS16_Sickle",
+		Pickup_Weapon,
+		Use_Weapon,
+		Drop_Weapon,
+		Weapon_Sickle,
+		"misc/w_pkup.wav",
+		"models/weapons/g_hyperb/tris.md2", EF_ROTATE,
+		"models/weapons/v_hyperb/tris.md2",
+		/* icon */		"w_hyperblaster",
+		/* pickup */	"Sickle",
+						0,
+						1,
+						"EnergySickle",
+						IT_WEAPON | IT_STAY_COOP,
+						WEAP_HYPERBLASTER,
+						NULL,
+						0,
+						/* precache */ "weapons/hyprbu1a.wav weapons/hyprbl1a.wav weapons/hyprbf1a.wav weapons/hyprbd1a.wav misc/lasfly.wav"
+			},
 	{
 		"weapon_Breaker",
 		Pickup_Weapon,
@@ -2265,26 +1908,7 @@ tank commander's head
 				0,
 /* precache */ "weapons/rg_hum.wav"
 	},
-	{
-		"ammo_energy",
-		Pickup_Ammo,
-		NULL,
-		Drop_Ammo,
-		NULL,
-		"misc/am_pkup.wav",
-		"models/items/ammo/cells/medium/tris.md2", 0,
-		NULL,
-/* icon */		"a_cells",
-/* pickup */	"RailPow",
-/* width */		3,
-				100,
-				NULL,
-				IT_AMMO,
-				0,
-				NULL,
-				5,
-/* precache */ ""
-	},
+
 	{
 		"weapon_AutoCannon",
 		Pickup_Weapon,
@@ -2306,26 +1930,7 @@ tank commander's head
 /* precache */ "models/objects/rocket/tris.md2 weapons/rockfly.wav weapons/rocklf1a.wav weapons/rocklr1b.wav models/objects/debris2/tris.md2"
 		
 	},
-	{
-		"ammo_ac",
-		Pickup_Ammo,
-		NULL,
-		Drop_Ammo,
-		NULL,
-		"misc/am_pkup.wav",
-		"models/items/ammo/cells/medium/tris.md2", 0,
-		NULL,
-/* icon */		"a_rockets",
-/* pickup */	"AutoCannon Rounds",
-/* width */		3,
-				100,
-				NULL,
-				IT_AMMO,
-				0,
-				NULL,
-				5,
-/* precache */ ""
-	},
+
 	{
 		"weapon_las-99cannon",
 		Pickup_Weapon,
@@ -2426,47 +2031,7 @@ tank commander's head
 				0,
 /* precache */ "weapons/chngnu1a.wav weapons/chngnl1a.wav weapons/machgf3b.wav` weapons/chngnd1a.wav"
 	},
-	{
-		"key_overheat_flag",
-		Pickup_Key,
-		NULL,
-		Drop_General,
-		NULL,
-		"items/pkup.wav",
-		"models/items/keys/data_cd/tris.md2", EF_ROTATE,
-		NULL,
-		"k_datacd",
-		"Overheat",
-/* width */		3,
-				100,
-				NULL,
-				IT_AMMO,
-				0,
-				NULL,
-				5,
-/* precache */ ""
 
-	},
-	{
-		"ammo_mag",
-		Pickup_Ammo,
-		NULL,
-		Drop_Ammo,
-		NULL,
-		"misc/am_pkup.wav",
-		"models/items/ammo/cells/medium/tris.md2", 0,
-		NULL,
-/* icon */		"a_rockets",
-/* pickup */	"Current Rounds",
-/* width */		3,
-		100,
-		NULL,
-		IT_AMMO,
-		0,
-		NULL,
-		5,
-/* precache */ ""
-	},
 	{
 		"stratagem_OPStrike",
 		Pickup_Ammo,
@@ -2487,6 +2052,457 @@ tank commander's head
 				8,
 /* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav "
 		},
+
+		{
+		NULL,
+		Pickup_Health,
+		NULL,
+		NULL,
+		NULL,
+		"items/pkup.wav",
+		NULL, 0,
+		NULL,
+		/* icon */		"i_health",
+		/* pickup */	"Health",
+		/* width */		3,
+				0,
+				NULL,
+				0,
+				0,
+				NULL,
+				0,
+				/* precache */ "items/s_health.wav items/n_health.wav items/l_health.wav items/m_health.wav"
+		},
+		//
+// POWERUP ITEMS
+//
+/*QUAKED item_quad (.3 .3 1) (-16 -16 -16) (16 16 16)
+*/
+	{
+		"item_quad",
+		Pickup_Powerup,
+		Use_Quad,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/quaddama/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"p_quad",
+		/* pickup */	"Quad Damage",
+		/* width */		2,
+				60,
+				NULL,
+				IT_POWERUP,
+				0,
+				NULL,
+				0,
+				/* precache */ "items/damage.wav items/damage2.wav items/damage3.wav"
+	},
+
+	/*QUAKED item_invulnerability (.3 .3 1) (-16 -16 -16) (16 16 16)
+	*/
+	{
+		"item_invulnerability",
+		Pickup_Powerup,
+		Use_Invulnerability,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/invulner/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"p_invulnerability",
+		/* pickup */	"Invulnerability",
+		/* width */		2,
+				300,
+				NULL,
+				IT_POWERUP,
+				0,
+				NULL,
+				0,
+				/* precache */ "items/protect.wav items/protect2.wav items/protect4.wav"
+	},
+
+	/*QUAKED item_silencer (.3 .3 1) (-16 -16 -16) (16 16 16)
+	*/
+	{
+		"item_silencer",
+		Pickup_Powerup,
+		Use_Silencer,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/silencer/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"p_silencer",
+		/* pickup */	"Silencer",
+		/* width */		2,
+				60,
+				NULL,
+				IT_POWERUP,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
+	},
+
+	/*QUAKED item_breather (.3 .3 1) (-16 -16 -16) (16 16 16)
+	*/
+	{
+		"item_breather",
+		Pickup_Powerup,
+		Use_Breather,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/breather/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"p_rebreather",
+		/* pickup */	"Rebreather",
+		/* width */		2,
+				60,
+				NULL,
+				IT_STAY_COOP | IT_POWERUP,
+				0,
+				NULL,
+				0,
+				/* precache */ "items/airout.wav"
+	},
+
+	/*QUAKED item_enviro (.3 .3 1) (-16 -16 -16) (16 16 16)
+	*/
+	{
+		"item_enviro",
+		Pickup_Powerup,
+		Use_Envirosuit,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/enviro/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"p_envirosuit",
+		/* pickup */	"Environment Suit",
+		/* width */		2,
+				60,
+				NULL,
+				IT_STAY_COOP | IT_POWERUP,
+				0,
+				NULL,
+				0,
+				/* precache */ "items/airout.wav"
+	},
+
+	/*QUAKED item_ancient_head (.3 .3 1) (-16 -16 -16) (16 16 16)
+	Special item that gives +2 to maximum health
+	*/
+	{
+		"item_ancient_head",
+		Pickup_AncientHead,
+		NULL,
+		NULL,
+		NULL,
+		"items/pkup.wav",
+		"models/items/c_head/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"i_fixme",
+		/* pickup */	"Ancient Head",
+		/* width */		2,
+				60,
+				NULL,
+				0,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
+	},
+
+	/*QUAKED item_adrenaline (.3 .3 1) (-16 -16 -16) (16 16 16)
+	gives +1 to maximum health
+	*/
+	{
+		"item_adrenaline",
+		Pickup_Adrenaline,
+		NULL,
+		NULL,
+		NULL,
+		"items/pkup.wav",
+		"models/items/adrenal/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"p_adrenaline",
+		/* pickup */	"Adrenaline",
+		/* width */		2,
+				60,
+				NULL,
+				0,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
+	},
+
+	/*QUAKED item_bandolier (.3 .3 1) (-16 -16 -16) (16 16 16)
+	*/
+	{
+		"item_bandolier",
+		Pickup_Bandolier,
+		NULL,
+		NULL,
+		NULL,
+		"items/pkup.wav",
+		"models/items/band/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"p_bandolier",
+		/* pickup */	"Bandolier",
+		/* width */		2,
+				60,
+				NULL,
+				0,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
+	},
+
+	/*QUAKED item_pack (.3 .3 1) (-16 -16 -16) (16 16 16)
+	*/
+	{
+		"item_pack",
+		Pickup_Pack,
+		NULL,
+		NULL,
+		NULL,
+		"items/pkup.wav",
+		"models/items/pack/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"i_pack",
+		/* pickup */	"Ammo Pack",
+		/* width */		2,
+				180,
+				NULL,
+				0,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
+	},
+
+	//
+	// KEYS
+	//
+/*QUAKED key_data_cd (0 .5 .8) (-16 -16 -16) (16 16 16)
+key for computer centers
+*/
+	{
+		"key_data_cd",
+		Pickup_Key,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/keys/data_cd/tris.md2", EF_ROTATE,
+		NULL,
+		"k_datacd",
+		"Data CD",
+		2,
+		0,
+		NULL,
+		IT_STAY_COOP | IT_KEY,
+		0,
+		NULL,
+		0,
+		/* precache */ ""
+	},
+
+	/*QUAKED key_power_cube (0 .5 .8) (-16 -16 -16) (16 16 16) TRIGGER_SPAWN NO_TOUCH
+	warehouse circuits
+	*/
+	{
+		"key_power_cube",
+		Pickup_Key,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/keys/power/tris.md2", EF_ROTATE,
+		NULL,
+		"k_powercube",
+		"Power Cube",
+		2,
+		0,
+		NULL,
+		IT_STAY_COOP | IT_KEY,
+		0,
+		NULL,
+		0,
+		/* precache */ ""
+	},
+
+	/*QUAKED key_pyramid (0 .5 .8) (-16 -16 -16) (16 16 16)
+	key for the entrance of jail3
+	*/
+	{
+		"key_pyramid",
+		Pickup_Key,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/keys/pyramid/tris.md2", EF_ROTATE,
+		NULL,
+		"k_pyramid",
+		"Pyramid Key",
+		2,
+		0,
+		NULL,
+		IT_STAY_COOP | IT_KEY,
+		0,
+		NULL,
+		0,
+		/* precache */ ""
+	},
+
+	/*QUAKED key_data_spinner (0 .5 .8) (-16 -16 -16) (16 16 16)
+	key for the city computer
+	*/
+	{
+		"key_data_spinner",
+		Pickup_Key,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/keys/spinner/tris.md2", EF_ROTATE,
+		NULL,
+		"k_dataspin",
+		"Data Spinner",
+		2,
+		0,
+		NULL,
+		IT_STAY_COOP | IT_KEY,
+		0,
+		NULL,
+		0,
+		/* precache */ ""
+	},
+
+	/*QUAKED key_pass (0 .5 .8) (-16 -16 -16) (16 16 16)
+	security pass for the security level
+	*/
+	{
+		"key_pass",
+		Pickup_Key,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/keys/pass/tris.md2", EF_ROTATE,
+		NULL,
+		"k_security",
+		"Security Pass",
+		2,
+		0,
+		NULL,
+		IT_STAY_COOP | IT_KEY,
+		0,
+		NULL,
+		0,
+		/* precache */ ""
+	},
+
+	/*QUAKED key_blue_key (0 .5 .8) (-16 -16 -16) (16 16 16)
+	normal door key - blue
+	*/
+	{
+		"key_blue_key",
+		Pickup_Key,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/keys/key/tris.md2", EF_ROTATE,
+		NULL,
+		"k_bluekey",
+		"Blue Key",
+		2,
+		0,
+		NULL,
+		IT_STAY_COOP | IT_KEY,
+		0,
+		NULL,
+		0,
+		/* precache */ ""
+	},
+
+	/*QUAKED key_red_key (0 .5 .8) (-16 -16 -16) (16 16 16)
+	normal door key - red
+	*/
+	{
+		"key_red_key",
+		Pickup_Key,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/keys/red_key/tris.md2", EF_ROTATE,
+		NULL,
+		"k_redkey",
+		"Red Key",
+		2,
+		0,
+		NULL,
+		IT_STAY_COOP | IT_KEY,
+		0,
+		NULL,
+		0,
+		/* precache */ ""
+	},
+
+	/*QUAKED key_commander_head (0 .5 .8) (-16 -16 -16) (16 16 16)
+	tank commander's head
+	*/
+	{
+		"key_commander_head",
+		Pickup_Key,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/monsters/commandr/head/tris.md2", EF_GIB,
+		NULL,
+		/* icon */		"k_comhead",
+		/* pickup */	"Commander's Head",
+		/* width */		2,
+				0,
+				NULL,
+				IT_STAY_COOP | IT_KEY,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
+	},
+
+	/*QUAKED key_airstrike_target (0 .5 .8) (-16 -16 -16) (16 16 16)
+	tank commander's head
+	*/
+	{
+		"key_airstrike_target",
+		Pickup_Key,
+		NULL,
+		Drop_General,
+		NULL,
+		"items/pkup.wav",
+		"models/items/keys/target/tris.md2", EF_ROTATE,
+		NULL,
+		/* icon */		"i_airstrike",
+		/* pickup */	"Airstrike Marker",
+		/* width */		2,
+				0,
+				NULL,
+				IT_STAY_COOP | IT_KEY,
+				0,
+				NULL,
+				0,
+				/* precache */ ""
+	},
 
 
 	// end of list marker

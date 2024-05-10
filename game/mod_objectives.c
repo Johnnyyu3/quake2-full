@@ -5,7 +5,8 @@ int objective_type = -1;
 
 
 void ED_CallSpawn(edict_t* ent);
-
+char quest[200] = "Press 5 to init loadout\n Press 9 to start an Objective.";
+char quest_secondary[200] = "LCtrl for Stratagem/ConfigLoadout\nArrowKeys to nagivate both.";
 char* le_objectif[3] = {"Kill Enemies", "Complete Stratagem Code", "Complete Stratagem Code and Survive"};
 
 void UpdateQuest()
@@ -182,5 +183,6 @@ void MissionComplete(edict_t* ent)
 	gi.cprintf(ent, PRINT_HIGH, "Mission complete.\n");
 	objective_type = -1;
 	objective = false;
-	quest[0] = 0;
+	char quest[200] = "Press 5 to init loadout\n Press 9 to start an Objective.";
+	char quest_secondary[200] = "LCtrl for Stratagem/ConfigLoadout\nArrowKeys to nagivate both.";
 }

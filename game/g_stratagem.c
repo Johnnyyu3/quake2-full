@@ -147,12 +147,12 @@ node* traverse_strat_tree(int* arrows, int len) {
 }
 
 
-void Give_Reload(edict_t* ent)
+void Give_Reload(edict_t* ent, char* s)
 {
 	int* rds = &ent->client->pers.inventory[ITEM_INDEX(FindItem("Current Rounds"))];
 	int ammo = 0;
 	gitem_t* wep;
-	wep = ent->client->pers.weapon;
+	wep = FindItem(s);
 	if (Q_stricmp(wep->classname, "weapon_senator") == 0)
 	{
 		if (*rds >= 6)
@@ -160,6 +160,7 @@ void Give_Reload(edict_t* ent)
 		ammo = 6;
 		change_ammo_count(ent, ammo);
 		ammo = *rds;
+		return;
 	}
 	else if (Q_stricmp(wep->classname, "weapon_slugger") == 0)
 	{
@@ -168,17 +169,20 @@ void Give_Reload(edict_t* ent)
 		ammo = 16;
 		change_ammo_count(ent, ammo);
 		ammo = *rds;
+		return;
 	}
 	else if (Q_stricmp(wep->classname, "weapon_las-99cannon") == 0)
 	{
-		ammo = -1;
+		ammo = 1;
 		ent->client->pers.inventory[ITEM_INDEX(FindItem("Energy"))] = 100;
+		return;
 	}
 	else if (Q_stricmp(wep->classname, "weapon_LAS16_Sickle") == 0)
 	{
-		ammo = -1;
+		ammo = 1;
 		ent->client->pers.inventory[ITEM_INDEX(FindItem("Sickle Mag"))] = 6;
 		ent->client->pers.inventory[ITEM_INDEX(FindItem("EnergySickle"))] = 88;
+		return;
 	}
 	rds = ammo;
 	Reload(ent);
@@ -197,25 +201,33 @@ void give_Weap(edict_t* ent, char* name) {
 	else
 	{
 		if (ent->client->pers.inventory[index] == 1)
+		{
+			it->use(ent, it);
 			return;
+		}
+
 		it_ent = G_Spawn();
 		it_ent->classname = it->classname;
 		SpawnItem(it_ent, it);
 		Touch_Item(it_ent, ent, NULL, NULL);
 		if (it_ent->inuse)
 			G_FreeEdict(it_ent);
+		Add_Ammo(ent, FindItem(it->ammo), FindItem(it->ammo)->quantity);
 	}
 	if (Q_stricmp(name, "Orbital Precision Strike") == 0)
 	{
 		it->use(ent, it);
 		return;
 	}
+	it->use(ent, it);
 
-	Give_Reload(ent);
+	Give_Reload(ent, name);
 
 }
 
 
+
+strat_cd[6] = { 240, 240, 240, 240, 50, 90 };
 char* loadout[7] = {"Primary","Secondary", "Stratagem","Stratagem","Stratagem", "Stratagem", "Stratagem"};
 
 char* primaries[4] = {"Sickle","Breaker","Breaker Incendiary","Slugger"};
@@ -302,9 +314,14 @@ void Use_Loadout(edict_t* ent, char* s)
 		}
 	}
 	it = FindItem(s);
+	if (!it && (Q_stricmp(s, "Stratagem") == 0))
+	{
+		gi.cprintf(ent, PRINT_HIGH, "No item: %s -- Call in a Stratagem weapon.\n", s);
+		return;
+	}
 	if (!it)
 	{
-		gi.cprintf(ent, PRINT_HIGH, "unknown item: %s\n", s);
+		gi.cprintf(ent, PRINT_HIGH, "unknown item: %s -- has it been configured?\n", s);
 		return;
 	}
 	if (!it->use)
